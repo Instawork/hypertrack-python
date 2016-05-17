@@ -55,6 +55,12 @@ class HyperTrackObject(dict):
     def __repr__(self):
         ident_parts = [type(self).__name__]
 
+        # Python 3 compatibility for string types
+        try:
+            basestring
+        except NameError:
+            basestring = str
+
         if isinstance(self.get('object'), basestring):
             ident_parts.append(self.get('object'))
 

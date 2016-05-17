@@ -4,6 +4,7 @@ HyperTrack Python Bindings
 [![PyPI version](https://badge.fury.io/py/hypertrack.svg)](https://badge.fury.io/py/hypertrack)
 [![Coverage Status](https://coveralls.io/repos/github/hypertrack/hypertrack-python/badge.svg?branch=master)](https://coveralls.io/github/hypertrack/hypertrack-python?branch=master)
 [![Code Health](https://landscape.io/github/hypertrack/hypertrack-python/master/landscape.png)](https://landscape.io/github/hypertrack/hypertrack-python/master)
+[![Slack Status](http://slack.hypertrack.io/badge.svg)](http://slack.hypertrack.io)
 
 A python wrapper for the [HyperTrack api](http://docs.hypertrack.io).
 

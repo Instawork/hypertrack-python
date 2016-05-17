@@ -6,9 +6,11 @@ from hypertrack.exceptions import HyperTrackException
 
 
 class ExceptionsTests(unittest2.TestCase):
-
+    '''
+    Test custom exceptions
+    '''
     def test_formatting(self):
-        excp = HyperTrackException(u'café')
+        excp = HyperTrackException(u'café', '{"body":"json"}')
 
         if sys.version_info > (3, 0):
             assert str(excp) == u'café'

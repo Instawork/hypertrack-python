@@ -411,10 +411,11 @@ class GPSLog(APIResource, CreateMixin, RetrieveMixin, ListMixin):
     '''
     resource_url = 'gps/'
 
-    def filtered(self, **params):
-        url = urlparse.urljoin(self.get_class_url(), 'filtered/')
-        resp = self._make_request('get', url, params=params)
-        return ListObject(self, **resp.json())
+    @classmethod
+    def filtered(cls, **params):
+        url = urlparse.urljoin(cls.get_class_url(), 'filtered/')
+        resp = cls._make_request('get', url, params=params)
+        return ListObject(cls, **resp.json())
 
 
 class Event(APIResource, RetrieveMixin, ListMixin):

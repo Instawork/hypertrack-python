@@ -1,29 +1,36 @@
 language: python
 python:
-    - "2.6"
-    - "2.7"
-    - "pypy"
-    - "3.3"
-    - "3.4"
-    - "3.5"
-
+- '2.6'
+- '2.7'
+- pypy
+- '3.3'
+- '3.4'
+- '3.5'
 cache:
   apt: true
   pip: false
-
 install:
-    - pip install --upgrade coverage pytest unittest2 pytest-cov coveralls
-    - python setup.py clean --all
-    - python setup.py install
-    - python setup.py clean --all
-
+- pip install --upgrade coverage pytest unittest2 pytest-cov coveralls
+- python setup.py clean --all
+- python setup.py install
+- python setup.py clean --all
 script:
-    - py.test --cov=hypertrack
-
+- py.test --cov=hypertrack
 after_success:
-    - coveralls
-
+- coveralls
 branches:
-    only:
-        - master
-        - develop
+  only:
+  - master
+  - develop
+notifications:
+  slack:
+    secure: tUxzRze4VIivN1tqbkrQFM9+WnNEVMIROtKk+6K4KD2qAh354rPycKQ1GxaMWH3PXPx3H9p+BDp9ue1cmDRRSsiIjfFqmKWKvtkz5yS2kQ/4cvazXu4lhi2KEgKo4/8Dkil/24SpZ2gXyouk1RB2D4sMlRjCHiUVVW5ga18EgEjB+bdKLNy4ADb7k+2fDVmGwEbJ80LY4FYYIZKhxI7GhFeVHJ1u6UK4lRvL3y5UtI5cFzJ2mXrI+EZzA1oDfUydBhwm9OjnEyOyAjTbulG7emijl6ooE3AXq8ZPP2g9X7pK/APwGWa1SvNSf+/vVzVDE2eUw/7EGCzt/RfxJm068W0JNPsD0X1rWrwUrzFasud/ZAjKY5oxsyYL2M5it1kg0SJcf93mtRMyOq1SdLELumGIqD9FTR9OSXYe0XByqGipVBjZ/1zkEV4RBjAJ/a1R49ODplc4sUV5t4eXzAduMoQeAg4ZhS5qmZ/F9ngTWcDNq3gAc3dFJKCF9D5ZCxfxIkm3jbEP2LvN46ytWeiVjTgA26p/YHL9BZ6/EnZXAPChCTqM69SsU16RWmP92BQjBcPaq7XYKB9rFfclqxc6IPfHzRjeyXX9lo/f/1cbo8dgSoZ1Li7kSYTxHWEDO/9+JQgrZOpTtt3K2AeLpIV1Silml4n2J29lGhMnIfPLNgA=
+deploy:
+  provider: pypi
+  user: hypertrack
+  password:
+    secure: SmTwJSrfSHvLw9iLHqsfGpmz4kBCaEfRPYitFzotQWXRsSfepV5LX1FNnUnNw64d6kY8SZ8QivPRSKBMQurXEe3Z+I13fm9iabMJ8wwBf1/SzyPjkPzcbTiOrkOMlAZbY2WNXMOjkKqZpz0csE0AotfecTPCpgXMpqUEUqz/2C5Ecfd9lILMAPwqTJwLMnsWl5gA10U+UcWTs/9iFv3onE7FQeh0TWZlQ6YVvIqz4jamEbm2RLdxSFOygtueQTewJ+KRkm+ltvd1w8OFKrZSpjY4KwASagxRYtRT3DVPUlD1xh+BmcrojVlMwVlaXQreF3MvTCY2+48ggFf94XYekUMk+Msr7Elaea6QZ9/q6rGCoDvMbQg3h9kA7Wa1TcxjeH9ahthV94ySAGwX7R0X3zNUNGr5g1WuYDPqeD3zREb59TAqT79epYFWCLHYeGHaVCJyWZcNar3krNI9TJAO7+v4er9p9zcUj7uzoFXwNTmvu4YKo7PK/8SLqc+hGF0FFAWvqRXdFqE9HxZOWnX+d4yxKgSNtOkZyAUznyDlHYFC7/fflhCVi+KmqMiKoNKRf4neJQq9X2Hn8Fv7SWxxYdPcTzDUUG0rB4K6Rry7hqSVPfLD4hKkV9Kr726f9ktWUPvofQlHFc554fL9cHNAIK5TaozjQadS+bMIaUzGor4=
+  on:
+    branch: master
+    distributions: sdist bdist_wheel
+    repo: hypertrack/hypertrack-python

@@ -349,6 +349,7 @@ class DriverTests(unittest2.TestCase):
         with patch.object(Driver, '_make_request', return_value=response) as mock_request:
             driver = Driver.create(**DUMMY_DRIVER)
             mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/drivers/', data=DUMMY_DRIVER, files=None)
+            self.assertEqual(driver.name, DUMMY_DRIVER.get('name'))
 
     def test_retrieve_driver(self):
         hypertrack_id = str(uuid.uuid4())

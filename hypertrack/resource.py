@@ -366,7 +366,7 @@ class Driver(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
         else:
             files = None
 
-        super(Driver, cls).create(files=files, **data)
+        return super(Driver, cls).create(files=files, **data)
 
     def save(self, *args, **kwargs):
         '''

@@ -458,8 +458,19 @@ class TaskTests(unittest2.TestCase):
 
         with patch.object(Task, '_make_request', return_value=response) as mock_request:
             task = Task(id=hypertrack_id, **DUMMY_TASK)
-            task.complete(completion_location=completion_location)
+            task.complete(**data)
             mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/completed/'.format(hypertrack_id=hypertrack_id), data=data)
+
+    def test_task_canceled(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_TASK))
+        cancelation_time = '2016-03-09T06:00:20.648785Z'
+        data = {'cancelation_time': cancelation_time}
+
+        with patch.object(Task, '_make_request', return_value=response) as mock_request:
+            task = Task(id=hypertrack_id, **DUMMY_TASK)
+            task.cancel(**data)
+            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/canceled/'.format(hypertrack_id=hypertrack_id), data=data)
 
 
 class TripTests(unittest2.TestCase):
@@ -498,7 +509,7 @@ class TripTests(unittest2.TestCase):
             trips = Trip.list()
             mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/trips/', params={})
 
-    def test_task_completed(self):
+    def test_trip_ended(self):
         hypertrack_id = str(uuid.uuid4())
         response = MockResponse(200, json.dumps(DUMMY_TRIP))
         end_location = {'type': 'Point', 'coordinates': [72, 19]}
@@ -508,6 +519,39 @@ class TripTests(unittest2.TestCase):
             trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
             trip.end(end_location=end_location)
             mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/end/'.format(hypertrack_id=hypertrack_id), data=data)
+
+    def test_trip_add_task(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_TRIP))
+        task_id = str(uuid.uuid4())
+        data = {'task_id': task_id}
+
+        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
+            trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
+            trip.add_task(**data)
+            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/add_task/'.format(hypertrack_id=hypertrack_id), data=data)
+
+    def test_trip_remove_task(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_TRIP))
+        task_id = str(uuid.uuid4())
+        data = {'task_id': task_id}
+
+        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
+            trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
+            trip.remove_task(**data)
+            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/remove_task/'.format(hypertrack_id=hypertrack_id), data=data)
+
+    def test_trip_change_order(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_TRIP))
+        task_order = [str(uuid.uuid4()), str(uuid.uuid4())]
+        data = {'task_order': task_order}
+
+        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
+            trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
+            trip.change_task_order(**data)
+            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/change_task_order/'.format(hypertrack_id=hypertrack_id), data=data)
 
 
 class GPSLogTests(unittest2.TestCase):

@@ -398,6 +398,11 @@ class Task(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 
+    def cancel(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'canceled/')
+        resp = self._make_request('post', url, data=data)
+        return self.__class__(**resp.json())
+
 
 class Trip(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
     '''
@@ -407,6 +412,21 @@ class Trip(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
 
     def end(self, **data):
         url = urlparse.urljoin(self.get_instance_url(), 'end/')
+        resp = self._make_request('post', url, data=data)
+        return self.__class__(**resp.json())
+
+    def remove_task(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'remove_task/')
+        resp = self._make_request('post', url, data=data)
+        return self.__class__(**resp.json())
+
+    def add_task(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'add_task/')
+        resp = self._make_request('post', url, data=data)
+        return self.__class__(**resp.json())
+
+    def change_task_order(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'change_task_order/')
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 

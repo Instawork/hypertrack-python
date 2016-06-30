@@ -472,6 +472,16 @@ class TaskTests(unittest2.TestCase):
             task.cancel(**data)
             mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/canceled/'.format(hypertrack_id=hypertrack_id), data=data)
 
+    def test_task_editable_url(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_TASK))
+        data = {'editable': 'once'}
+
+        with patch.object(Task, '_make_request', return_value=response) as mock_request:
+            task = Task(id=hypertrack_id, **DUMMY_TASK)
+            task.editable_url(**data)
+            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/editable_url/'.format(hypertrack_id=hypertrack_id), data=data)
+
 
 class TripTests(unittest2.TestCase):
     '''

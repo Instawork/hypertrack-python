@@ -403,6 +403,11 @@ class Task(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 
+    def editable_url(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'editable_url/')
+        resp = self._make_request('post', url, data=data)
+        return self.__class__(**resp.json())
+
 
 class Trip(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
     '''

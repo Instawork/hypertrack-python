@@ -454,3 +454,10 @@ class Event(APIResource, RetrieveMixin, ListMixin):
     The Event Resource: http://docs.hypertrack.io/docs/events
     '''
     resource_url = 'events/'
+
+
+class Neighborhood(APIResource, RetrieveMixin, ListMixin):
+    '''
+    The Event Resource: http://docs.hypertrack.io/docs/neighbourhoods/
+    '''
+    resource_url = 'neighborhoods/'

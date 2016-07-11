@@ -8,9 +8,10 @@ from mock import patch
 
 from .helper import DUMMY_CUSTOMER, DUMMY_DESTINATION, DUMMY_FLEET, DUMMY_DRIVER
 from .helper import DUMMY_HUB, DUMMY_TASK, DUMMY_TRIP, DUMMY_GPSLOG, DUMMY_EVENT
+from .helper import DUMMY_NEIGHBORHOOD
 
 from hypertrack.resource import HyperTrackObject
-from hypertrack.resource import Trip, GPSLog, Event, APIResource
+from hypertrack.resource import Trip, GPSLog, Event, APIResource, Neighborhood
 from hypertrack.resource import Customer, Destination, Fleet, Driver, Hub, Task
 from hypertrack.exceptions import InvalidRequestException, RateLimitException
 from hypertrack.exceptions import APIConnectionException, APIException
@@ -618,3 +619,23 @@ class EventTests(unittest2.TestCase):
         with patch.object(Event, '_make_request', return_value=response) as mock_request:
             events = Event.list()
             mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/events/', params={})
+
+
+class NeighborhoodTests(unittest2.TestCase):
+    '''
+    Test Neighborhood methods
+    '''
+    def test_retrieve_neighborhood(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_NEIGHBORHOOD))
+
+        with patch.object(Neighborhood, '_make_request', return_value=response) as mock_request:
+            neighborhood = Neighborhood.retrieve(hypertrack_id)
+            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/neighborhoods/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
+
+    def test_list_event(self):
+        response = MockResponse(200, json.dumps({'results': [DUMMY_NEIGHBORHOOD]}))
+
+        with patch.object(Neighborhood, '_make_request', return_value=response) as mock_request:
+            neighborhoods = Neighborhood.list()
+            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/neighborhoods/', params={})

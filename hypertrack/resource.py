@@ -393,6 +393,11 @@ class Task(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
     '''
     resource_url = 'tasks/'
 
+    def start(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'start/')
+        resp = self._make_request('post', url, data=data)
+        return self.__class__(**resp.json())
+
     def complete(self, **data):
         url = urlparse.urljoin(self.get_instance_url(), 'completed/')
         resp = self._make_request('post', url, data=data)
@@ -458,6 +463,6 @@ class Event(APIResource, RetrieveMixin, ListMixin):
 
 class Neighborhood(APIResource, RetrieveMixin, ListMixin):
     '''
-    The Event Resource: http://docs.hypertrack.io/docs/neighbourhoods/
+    The Neighborhood Resource: http://docs.hypertrack.io/docs/neighbourhoods/
     '''
     resource_url = 'neighborhoods/'

@@ -1,5 +1,6 @@
 import uuid
 import json
+import datetime
 import unittest2
 
 import pytest
@@ -450,6 +451,18 @@ class TaskTests(unittest2.TestCase):
         with patch.object(Task, '_make_request', return_value=response) as mock_request:
             tasks = Task.list()
             mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/tasks/', params={})
+
+    def test_task_start(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_TASK))
+        start_location = {'type': 'Point', 'coordinates': [72, 19]}
+        data = {'start_location': start_location, 'start_time':
+                datetime.datetime.now().isoformat()}
+
+        with patch.object(Task, '_make_request', return_value=response) as mock_request:
+            task = Task(id=hypertrack_id, **DUMMY_TASK)
+            task.complete(**data)
+            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/start/'.format(hypertrack_id=hypertrack_id), data=data)
 
     def test_task_completed(self):
         hypertrack_id = str(uuid.uuid4())

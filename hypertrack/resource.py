@@ -192,8 +192,9 @@ class APIResource(HyperTrackObject):
         Returns the URI for the individual resource
         '''
         url = urlparse.urljoin(self._get_base_url(),
-                      '{resource_url}{resource_id}/'.format(
-                          resource_url=self.resource_url, resource_id=self.id))
+                               '{resource_url}{resource_id}/'.format(
+                                   resource_url=self.resource_url,
+                                   resource_id=self.id))
         return url
 
 
@@ -280,9 +281,9 @@ class RetrieveMixin(object):
         Mixin method to retrieve the resource from the API
         '''
         url = urlparse.urljoin(cls._get_base_url(),
-                      '{resource_url}{resource_id}/'.format(
-                          resource_url=cls.resource_url,
-                          resource_id=hypertrack_id))
+                               '{resource_url}{resource_id}/'.format(
+                                   resource_url=cls.resource_url,
+                                   resource_id=hypertrack_id))
         resp = cls._make_request('get', url)
         return cls(**resp.json())
 
@@ -325,7 +326,7 @@ class DeleteMixin(object):
         Mixin method to update the resource on the API
         '''
         url = self.get_instance_url()
-        resp = self._make_request('delete', url)
+        self._make_request('delete', url)
         return self
 
 
@@ -466,3 +467,15 @@ class Neighborhood(APIResource, RetrieveMixin, ListMixin):
     The Neighborhood Resource: http://docs.hypertrack.io/docs/neighbourhoods/
     '''
     resource_url = 'neighborhoods/'
+
+
+class Shift(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
+    '''
+    The Trip Resource: http://docs.hypertrack.io/docs/trips
+    '''
+    resource_url = 'shifts/'
+
+    def end(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'end/')
+        resp = self._make_request('post', url, data=data)
+        return self.__class__(**resp.json())

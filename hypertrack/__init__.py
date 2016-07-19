@@ -11,7 +11,9 @@ from hypertrack.resource import (
     Task,
     Trip,
     GPSLog,
-    Event
+    Event,
+    Neighborhood,
+    Shift,
 )
 
 from hypertrack.version import VERSION

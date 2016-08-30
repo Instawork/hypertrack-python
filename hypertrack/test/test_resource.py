@@ -613,6 +613,13 @@ class GPSLogTests(unittest2.TestCase):
             gps = GPSLog.filtered(trip_id=trip_id)
             mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/gps/filtered/', params=params)
 
+    def test_bulk_gpslog(self):
+        response = MockResponse(200, json.dumps({}))
+
+        with patch.object(GPSLog, '_make_request', return_value=response) as mock_request:
+            response  = GPSLog.bulk([DUMMY_GPSLOG])
+            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/gps/bulk/', data=[DUMMY_GPSLOG])
+
 
 class EventTests(unittest2.TestCase):
     '''

@@ -454,6 +454,12 @@ class GPSLog(APIResource, CreateMixin, RetrieveMixin, ListMixin):
         resp = cls._make_request('get', url, params=params)
         return ListObject(cls, **resp.json())
 
+    @classmethod
+    def bulk(cls, data):
+        url = urlparse.urljoin(cls.get_class_url(), 'bulk/')
+        resp = cls._make_request('post', url, data=data)
+        return cls(**resp.json())
+
 
 class Event(APIResource, RetrieveMixin, ListMixin):
     '''

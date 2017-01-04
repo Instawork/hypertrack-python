@@ -380,6 +380,16 @@ class Driver(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
 
         super(Driver, self).save(files=files)
 
+    def assign_tasks(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'assign_tasks/')
+        resp = self._make_request('post', url, data=data)
+        return self.__class__(**resp.json())
+
+    def end_trip(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'end_trip/')
+        resp = self._make_request('post', url, data=data)
+        return self.__class__(**resp.json())
+
 
 class Hub(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
     '''
@@ -394,11 +404,6 @@ class Task(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
     '''
     resource_url = 'tasks/'
 
-    def start(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'start/')
-        resp = self._make_request('post', url, data=data)
-        return self.__class__(**resp.json())
-
     def complete(self, **data):
         url = urlparse.urljoin(self.get_instance_url(), 'completed/')
         resp = self._make_request('post', url, data=data)
@@ -406,11 +411,6 @@ class Task(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
 
     def cancel(self, **data):
         url = urlparse.urljoin(self.get_instance_url(), 'canceled/')
-        resp = self._make_request('post', url, data=data)
-        return self.__class__(**resp.json())
-
-    def editable_url(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'editable_url/')
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 

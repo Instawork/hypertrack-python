@@ -378,6 +378,26 @@ class DriverTests(unittest2.TestCase):
             drivers = Driver.list()
             mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/drivers/', params={})
 
+    def test_driver_end_trip(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_DRIVER))
+        data = {}
+
+        with patch.object(Driver, '_make_request', return_value=response) as mock_request:
+            driver = Driver(id=hypertrack_id, **DUMMY_DRIVER)
+            driver.end_trip()
+            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/end_trip/'.format(hypertrack_id=hypertrack_id), data=data)
+
+    def test_driver_assign_tasks(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_DRIVER))
+        data = {'task_ids': [str(uuid.uuid4())]}
+
+        with patch.object(Driver, '_make_request', return_value=response) as mock_request:
+            driver = Driver(id=hypertrack_id, **DUMMY_DRIVER)
+            driver.assign_tasks(**data)
+            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/assign_tasks/'.format(hypertrack_id=hypertrack_id), data=data)
+
 
 class HubTests(unittest2.TestCase):
     '''
@@ -452,18 +472,6 @@ class TaskTests(unittest2.TestCase):
             tasks = Task.list()
             mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/tasks/', params={})
 
-    def test_task_start(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TASK))
-        start_location = {'type': 'Point', 'coordinates': [72, 19]}
-        data = {'start_location': start_location, 'start_time':
-                datetime.datetime.now().isoformat()}
-
-        with patch.object(Task, '_make_request', return_value=response) as mock_request:
-            task = Task(id=hypertrack_id, **DUMMY_TASK)
-            task.start(**data)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/start/'.format(hypertrack_id=hypertrack_id), data=data)
-
     def test_task_completed(self):
         hypertrack_id = str(uuid.uuid4())
         response = MockResponse(200, json.dumps(DUMMY_TASK))
@@ -485,16 +493,6 @@ class TaskTests(unittest2.TestCase):
             task = Task(id=hypertrack_id, **DUMMY_TASK)
             task.cancel(**data)
             mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/canceled/'.format(hypertrack_id=hypertrack_id), data=data)
-
-    def test_task_editable_url(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TASK))
-        data = {'editable': 'once'}
-
-        with patch.object(Task, '_make_request', return_value=response) as mock_request:
-            task = Task(id=hypertrack_id, **DUMMY_TASK)
-            task.editable_url(**data)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/editable_url/'.format(hypertrack_id=hypertrack_id), data=data)
 
 
 class TripTests(unittest2.TestCase):

@@ -330,7 +330,8 @@ class DeleteMixin(object):
         return self
 
 
-class Customer(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
+class Customer(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
+               DeleteMixin):
     '''
     The Customer Resource: http://docs.hypertrack.io/docs/customers
     '''
@@ -338,21 +339,23 @@ class Customer(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
 
 
 class Destination(APIResource, CreateMixin, RetrieveMixin, UpdateMixin,
-                  ListMixin):
+                  ListMixin, DeleteMixin):
     '''
     The Destination Resource: http://docs.hypertrack.io/docs/destinations
     '''
     resource_url = 'destinations/'
 
 
-class Fleet(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
+class Fleet(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
+            DeleteMixin):
     '''
     The Fleet Resource: http://docs.hypertrack.io/docs/fleets
     '''
     resource_url = 'fleets/'
 
 
-class Driver(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
+class Driver(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
+             DeleteMixin):
     '''
     The Driver Resource: http://docs.hypertrack.io/docs/drivers
     '''
@@ -391,14 +394,16 @@ class Driver(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
         return self.__class__(**resp.json())
 
 
-class Hub(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
+class Hub(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
+          DeleteMixin):
     '''
     The Hub Resource: http://docs.hypertrack.io/docs/hubs
     '''
     resource_url = 'hubs/'
 
 
-class Task(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
+class Task(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
+           DeleteMixin):
     '''
     The Task Resource: http://docs.hypertrack.io/docs/tasks
     '''
@@ -415,7 +420,8 @@ class Task(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
         return self.__class__(**resp.json())
 
 
-class Trip(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
+class Trip(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
+           DeleteMixin):
     '''
     The Trip Resource: http://docs.hypertrack.io/docs/trips
     '''
@@ -475,7 +481,8 @@ class Neighborhood(APIResource, RetrieveMixin, ListMixin):
     resource_url = 'neighborhoods/'
 
 
-class Shift(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin):
+class Shift(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
+            DeleteMixin):
     '''
     The Trip Resource: http://docs.hypertrack.io/docs/trips
     '''

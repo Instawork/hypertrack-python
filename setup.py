@@ -30,7 +30,7 @@ setup(
     author_email='devops@hypertrack.io',
     url='http://github.com/hypertrack/hypertrack-python/',
     license='MIT',
-    install_requires=['requests >= 0.8.8', ],
+    install_requires=['requests >= 2.6.0', ],
     py_modules=['hypertrack'],
     packages=['hypertrack', 'hypertrack.test'],
     package_data={

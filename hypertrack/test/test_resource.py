@@ -266,6 +266,15 @@ class CustomerTests(unittest2.TestCase):
             customers = Customer.list()
             mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/customers/', params={})
 
+    def test_delete_customer(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(204, json.dumps({}))
+
+        with patch.object(Customer, '_make_request', return_value=response) as mock_request:
+            customer = Customer(id=hypertrack_id, **DUMMY_CUSTOMER)
+            customer.delete()
+            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/customers/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
+
 
 class DestinationTests(unittest2.TestCase):
     '''
@@ -303,6 +312,15 @@ class DestinationTests(unittest2.TestCase):
             destinations = Destination.list()
             mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/destinations/', params={})
 
+    def test_delete_destination(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(204, json.dumps({}))
+
+        with patch.object(Destination, '_make_request', return_value=response) as mock_request:
+            destination = Destination(id=hypertrack_id, **DUMMY_DESTINATION)
+            destination.delete()
+            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/destinations/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
+
 
 class FleetTests(unittest2.TestCase):
     '''
@@ -339,6 +357,15 @@ class FleetTests(unittest2.TestCase):
         with patch.object(Fleet, '_make_request', return_value=response) as mock_request:
             fleets = Fleet.list()
             mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/fleets/', params={})
+
+    def test_delete_fleet(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(204, json.dumps({}))
+
+        with patch.object(Fleet, '_make_request', return_value=response) as mock_request:
+            fleet = Fleet(id=hypertrack_id, **DUMMY_FLEET)
+            fleet.delete()
+            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/fleets/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
 
 class DriverTests(unittest2.TestCase):
@@ -398,6 +425,15 @@ class DriverTests(unittest2.TestCase):
             driver.assign_tasks(**data)
             mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/assign_tasks/'.format(hypertrack_id=hypertrack_id), data=data)
 
+    def test_delete_driver(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(204, json.dumps({}))
+
+        with patch.object(Driver, '_make_request', return_value=response) as mock_request:
+            driver = Driver(id=hypertrack_id, **DUMMY_DRIVER)
+            driver.delete()
+            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
+
 
 class HubTests(unittest2.TestCase):
     '''
@@ -434,6 +470,15 @@ class HubTests(unittest2.TestCase):
         with patch.object(Hub, '_make_request', return_value=response) as mock_request:
             hubs = Hub.list()
             mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/hubs/', params={})
+
+    def test_delete_hub(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(204, json.dumps({}))
+
+        with patch.object(Hub, '_make_request', return_value=response) as mock_request:
+            hub = Hub(id=hypertrack_id, **DUMMY_HUB)
+            hub.delete()
+            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/hubs/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
 
 class TaskTests(unittest2.TestCase):
@@ -493,6 +538,15 @@ class TaskTests(unittest2.TestCase):
             task = Task(id=hypertrack_id, **DUMMY_TASK)
             task.cancel(**data)
             mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/canceled/'.format(hypertrack_id=hypertrack_id), data=data)
+
+    def test_delete_task(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(204, json.dumps({}))
+
+        with patch.object(Task, '_make_request', return_value=response) as mock_request:
+            task = Task(id=hypertrack_id, **DUMMY_TASK)
+            task.delete()
+            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
 
 class TripTests(unittest2.TestCase):
@@ -574,6 +628,15 @@ class TripTests(unittest2.TestCase):
             trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
             trip.change_task_order(**data)
             mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/change_task_order/'.format(hypertrack_id=hypertrack_id), data=data)
+
+    def test_delete_trip(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(204, json.dumps({}))
+
+        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
+            trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
+            trip.delete()
+            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
 
 class GPSLogTests(unittest2.TestCase):

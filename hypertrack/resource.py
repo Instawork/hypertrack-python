@@ -365,7 +365,8 @@ class Driver(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
     def create(cls, **data):
         '''
         '''
-        if 'photo' in data:
+        if 'photo' in data and hasattr(data['photo'], 'read'):
+            # Send photo as file since it's a file
             files = {'photo': data.pop('photo')}
         else:
             files = None
@@ -375,7 +376,8 @@ class Driver(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
     def save(self, *args, **kwargs):
         '''
         '''
-        if 'photo' in self._unsaved_keys:
+        if 'photo' in self._unsaved_keys and hasattr(self._unsaved_keys['photo'], 'read'):
+            # Send photo as file since it's a file
             files = {'photo': self.photo}
             self._unsaved_keys.remove('photo')
         else:

@@ -397,7 +397,7 @@ class DriverTests(unittest2.TestCase):
             driver.city = 'New York'
             driver.photo = 'http://photo-url.com/'
             driver.save()
-            mock_request.assert_called_once_with('patch', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'city': driver.city}, files=None)
+            mock_request.assert_called_once_with('patch', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'city': driver.city, 'photo': driver.photo}, files=None)
 
     def test_list_driver(self):
         response = MockResponse(200, json.dumps({'results': [DUMMY_DRIVER]}))

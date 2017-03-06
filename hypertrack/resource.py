@@ -343,7 +343,7 @@ class Action(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
         return self.__class__(**resp.json())
 
     def cancel(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'complete/')
+        url = urlparse.urljoin(self.get_instance_url(), 'cancel/')
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 

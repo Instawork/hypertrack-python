@@ -7,13 +7,10 @@ import pytest
 import requests
 from mock import patch
 
-from .helper import DUMMY_CUSTOMER, DUMMY_DESTINATION, DUMMY_FLEET, DUMMY_DRIVER
-from .helper import DUMMY_HUB, DUMMY_TASK, DUMMY_TRIP, DUMMY_GPSLOG, DUMMY_EVENT
-from .helper import DUMMY_NEIGHBORHOOD
+from .helper import DUMMY_PLACE, DUMMY_USER, DUMMY_ACTION, DUMMY_EVENT
 
 from hypertrack.resource import HyperTrackObject
-from hypertrack.resource import Trip, GPSLog, Event, APIResource, Neighborhood
-from hypertrack.resource import Customer, Destination, Fleet, Driver, Hub, Task
+from hypertrack.resource import Event, APIResource, Place, User, Action
 from hypertrack.exceptions import InvalidRequestException, RateLimitException
 from hypertrack.exceptions import APIConnectionException, APIException
 from hypertrack.exceptions import AuthenticationException
@@ -230,456 +227,176 @@ class APIResourceTests(unittest2.TestCase):
                                                  timeout=timeout)
 
 
-class CustomerTests(unittest2.TestCase):
+class PlaceTests(unittest2.TestCase):
     '''
-    Test customer methods
+    Test place methods
     '''
-    def test_create_customer(self):
-        response = MockResponse(201, json.dumps(DUMMY_CUSTOMER))
+    def test_create_place(self):
+        response = MockResponse(201, json.dumps(DUMMY_PLACE))
 
-        with patch.object(Customer, '_make_request', return_value=response) as mock_request:
-            customer = Customer.create(**DUMMY_CUSTOMER)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/customers/', data=DUMMY_CUSTOMER, files=None)
+        with patch.object(Place, '_make_request', return_value=response) as mock_request:
+            place = Place.create(**DUMMY_PLACE)
+            mock_request.assert_called_once_with('post', 'https://api.hypertrack.com/api/v1/places/', data=DUMMY_PLACE, files=None)
 
-    def test_retrieve_customer(self):
+    def test_retrieve_place(self):
         hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_CUSTOMER))
+        response = MockResponse(200, json.dumps(DUMMY_PLACE))
 
-        with patch.object(Customer, '_make_request', return_value=response) as mock_request:
-            customer = Customer.retrieve(hypertrack_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/customers/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
+        with patch.object(Place, '_make_request', return_value=response) as mock_request:
+            place = Place.retrieve(hypertrack_id)
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/places/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
-    def test_update_customer(self):
+    def test_update_place(self):
         hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_CUSTOMER))
+        response = MockResponse(200, json.dumps(DUMMY_PLACE))
 
-        with patch.object(Customer, '_make_request', return_value=response) as mock_request:
-            customer = Customer(id=hypertrack_id, **DUMMY_CUSTOMER)
-            customer.name = 'Arjun'
-            customer.save()
-            mock_request.assert_called_once_with('patch', 'https://app.hypertrack.io/api/v1/customers/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'name': customer.name}, files=None)
+        with patch.object(Place, '_make_request', return_value=response) as mock_request:
+            place = Place(id=hypertrack_id, **DUMMY_PLACE)
+            place.city = 'New York'
+            place.save()
+            mock_request.assert_called_once_with('patch', 'https://api.hypertrack.com/api/v1/places/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'city': place.city}, files=None)
 
-    def test_list_customer(self):
-        response = MockResponse(200, json.dumps({'results': [DUMMY_CUSTOMER]}))
+    def test_list_place(self):
+        response = MockResponse(200, json.dumps({'results': [DUMMY_PLACE]}))
 
-        with patch.object(Customer, '_make_request', return_value=response) as mock_request:
-            customers = Customer.list()
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/customers/', params={})
+        with patch.object(Place, '_make_request', return_value=response) as mock_request:
+            places = Place.list()
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/places/', params={})
 
-    def test_delete_customer(self):
+    def test_delete_place(self):
         hypertrack_id = str(uuid.uuid4())
         response = MockResponse(204, json.dumps({}))
 
-        with patch.object(Customer, '_make_request', return_value=response) as mock_request:
-            customer = Customer(id=hypertrack_id, **DUMMY_CUSTOMER)
-            customer.delete()
-            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/customers/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
+        with patch.object(Place, '_make_request', return_value=response) as mock_request:
+            place = Place(id=hypertrack_id, **DUMMY_PLACE)
+            place.delete()
+            mock_request.assert_called_once_with('delete', 'https://api.hypertrack.com/api/v1/places/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
 
-class DestinationTests(unittest2.TestCase):
+class UserTests(unittest2.TestCase):
     '''
-    Test destination methods
+    Test user methods
     '''
-    def test_create_destination(self):
-        response = MockResponse(201, json.dumps(DUMMY_DESTINATION))
+    def test_create_user(self):
+        response = MockResponse(201, json.dumps(DUMMY_USER))
 
-        with patch.object(Destination, '_make_request', return_value=response) as mock_request:
-            destination = Destination.create(**DUMMY_DESTINATION)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/destinations/', data=DUMMY_DESTINATION, files=None)
+        with patch.object(User, '_make_request', return_value=response) as mock_request:
+            user = User.create(**DUMMY_USER)
+            mock_request.assert_called_once_with('post', 'https://api.hypertrack.com/api/v1/users/', data=DUMMY_USER, files=None)
+            self.assertEqual(user.name, DUMMY_USER.get('name'))
 
-    def test_retrieve_destination(self):
+    def test_retrieve_user(self):
         hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_DESTINATION))
+        response = MockResponse(200, json.dumps(DUMMY_USER))
 
-        with patch.object(Destination, '_make_request', return_value=response) as mock_request:
-            destination = Destination.retrieve(hypertrack_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/destinations/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
+        with patch.object(User, '_make_request', return_value=response) as mock_request:
+            user = User.retrieve(hypertrack_id)
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/users/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
-    def test_update_destination(self):
+    def test_update_user(self):
         hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_DESTINATION))
+        response = MockResponse(200, json.dumps(DUMMY_USER))
 
-        with patch.object(Destination, '_make_request', return_value=response) as mock_request:
-            destination = Destination(id=hypertrack_id, **DUMMY_DESTINATION)
-            destination.city = 'New York'
-            destination.save()
-            mock_request.assert_called_once_with('patch', 'https://app.hypertrack.io/api/v1/destinations/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'city': destination.city}, files=None)
+        with patch.object(User, '_make_request', return_value=response) as mock_request:
+            user = User(id=hypertrack_id, **DUMMY_USER)
+            user.city = 'New York'
+            user.photo = 'http://photo-url.com/'
+            user.save()
+            mock_request.assert_called_once_with('patch', 'https://api.hypertrack.com/api/v1/users/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'city': user.city, 'photo': user.photo}, files=None)
 
-    def test_list_destination(self):
-        response = MockResponse(200, json.dumps({'results': [DUMMY_DESTINATION]}))
+    def test_list_user(self):
+        response = MockResponse(200, json.dumps({'results': [DUMMY_USER]}))
 
-        with patch.object(Destination, '_make_request', return_value=response) as mock_request:
-            destinations = Destination.list()
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/destinations/', params={})
+        with patch.object(User, '_make_request', return_value=response) as mock_request:
+            users = User.list()
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/users/', params={})
 
-    def test_delete_destination(self):
+    def test_user_assign_actions(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_USER))
+        data = {'action_ids': [str(uuid.uuid4())]}
+
+        with patch.object(User, '_make_request', return_value=response) as mock_request:
+            user = User(id=hypertrack_id, **DUMMY_USER)
+            user.assign_actions(**data)
+            mock_request.assert_called_once_with('post', 'https://api.hypertrack.com/api/v1/users/{hypertrack_id}/assign_actions/'.format(hypertrack_id=hypertrack_id), data=data)
+
+    def test_delete_user(self):
         hypertrack_id = str(uuid.uuid4())
         response = MockResponse(204, json.dumps({}))
 
-        with patch.object(Destination, '_make_request', return_value=response) as mock_request:
-            destination = Destination(id=hypertrack_id, **DUMMY_DESTINATION)
-            destination.delete()
-            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/destinations/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
+        with patch.object(User, '_make_request', return_value=response) as mock_request:
+            user = User(id=hypertrack_id, **DUMMY_USER)
+            user.delete()
+            mock_request.assert_called_once_with('delete', 'https://api.hypertrack.com/api/v1/users/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
 
-class FleetTests(unittest2.TestCase):
+class ActionTests(unittest2.TestCase):
     '''
-    Test fleet methods
+    Test action methods
     '''
-    def test_create_fleet(self):
-        response = MockResponse(201, json.dumps(DUMMY_FLEET))
+    def test_create_action(self):
+        response = MockResponse(201, json.dumps(DUMMY_ACTION))
 
-        with patch.object(Fleet, '_make_request', return_value=response) as mock_request:
-            fleet = Fleet.create(**DUMMY_FLEET)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/fleets/', data=DUMMY_FLEET, files=None)
+        with patch.object(Action, '_make_request', return_value=response) as mock_request:
+            action = Action.create(**DUMMY_ACTION)
+            mock_request.assert_called_once_with('post', 'https://api.hypertrack.com/api/v1/actions/', data=DUMMY_ACTION, files=None)
 
-    def test_retrieve_fleet(self):
+    def test_retrieve_action(self):
         hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_FLEET))
+        response = MockResponse(200, json.dumps(DUMMY_ACTION))
 
-        with patch.object(Fleet, '_make_request', return_value=response) as mock_request:
-            fleet = Fleet.retrieve(hypertrack_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/fleets/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
+        with patch.object(Action, '_make_request', return_value=response) as mock_request:
+            action = Action.retrieve(hypertrack_id)
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/actions/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
-    def test_update_fleet(self):
+    def test_update_action(self):
         hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_FLEET))
+        response = MockResponse(200, json.dumps(DUMMY_ACTION))
 
-        with patch.object(Fleet, '_make_request', return_value=response) as mock_request:
-            fleet = Fleet(id=hypertrack_id, **DUMMY_FLEET)
-            fleet.name = 'New York'
-            fleet.save()
-            mock_request.assert_called_once_with('patch', 'https://app.hypertrack.io/api/v1/fleets/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'name': fleet.name}, files=None)
+        with patch.object(Action, '_make_request', return_value=response) as mock_request:
+            action = Action(id=hypertrack_id, **DUMMY_ACTION)
+            action.city = 'New York'
+            action.save()
+            mock_request.assert_called_once_with('patch', 'https://api.hypertrack.com/api/v1/actions/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'city': action.city}, files=None)
 
-    def test_list_fleet(self):
-        response = MockResponse(200, json.dumps({'results': [DUMMY_FLEET]}))
+    def test_list_action(self):
+        response = MockResponse(200, json.dumps({'results': [DUMMY_ACTION]}))
 
-        with patch.object(Fleet, '_make_request', return_value=response) as mock_request:
-            fleets = Fleet.list()
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/fleets/', params={})
+        with patch.object(Action, '_make_request', return_value=response) as mock_request:
+            actions = Action.list()
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/actions/', params={})
 
-    def test_delete_fleet(self):
+    def test_action_completed(self):
         hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(204, json.dumps({}))
-
-        with patch.object(Fleet, '_make_request', return_value=response) as mock_request:
-            fleet = Fleet(id=hypertrack_id, **DUMMY_FLEET)
-            fleet.delete()
-            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/fleets/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-
-class DriverTests(unittest2.TestCase):
-    '''
-    Test driver methods
-    '''
-    def test_create_driver(self):
-        response = MockResponse(201, json.dumps(DUMMY_DRIVER))
-
-        with patch.object(Driver, '_make_request', return_value=response) as mock_request:
-            driver = Driver.create(**DUMMY_DRIVER)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/drivers/', data=DUMMY_DRIVER, files=None)
-            self.assertEqual(driver.name, DUMMY_DRIVER.get('name'))
-
-    def test_retrieve_driver(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_DRIVER))
-
-        with patch.object(Driver, '_make_request', return_value=response) as mock_request:
-            driver = Driver.retrieve(hypertrack_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-    def test_update_driver(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_DRIVER))
-
-        with patch.object(Driver, '_make_request', return_value=response) as mock_request:
-            driver = Driver(id=hypertrack_id, **DUMMY_DRIVER)
-            driver.city = 'New York'
-            driver.save()
-            mock_request.assert_called_once_with('patch', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'city': driver.city}, files=None)
-
-    def test_list_driver(self):
-        response = MockResponse(200, json.dumps({'results': [DUMMY_DRIVER]}))
-
-        with patch.object(Driver, '_make_request', return_value=response) as mock_request:
-            drivers = Driver.list()
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/drivers/', params={})
-
-    def test_driver_end_trip(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_DRIVER))
-        data = {}
-
-        with patch.object(Driver, '_make_request', return_value=response) as mock_request:
-            driver = Driver(id=hypertrack_id, **DUMMY_DRIVER)
-            driver.end_trip()
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/end_trip/'.format(hypertrack_id=hypertrack_id), data=data)
-
-    def test_driver_assign_tasks(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_DRIVER))
-        data = {'task_ids': [str(uuid.uuid4())]}
-
-        with patch.object(Driver, '_make_request', return_value=response) as mock_request:
-            driver = Driver(id=hypertrack_id, **DUMMY_DRIVER)
-            driver.assign_tasks(**data)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/assign_tasks/'.format(hypertrack_id=hypertrack_id), data=data)
-
-    def test_delete_driver(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(204, json.dumps({}))
-
-        with patch.object(Driver, '_make_request', return_value=response) as mock_request:
-            driver = Driver(id=hypertrack_id, **DUMMY_DRIVER)
-            driver.delete()
-            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/drivers/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-
-class HubTests(unittest2.TestCase):
-    '''
-    Test hub methods
-    '''
-    def test_create_hub(self):
-        response = MockResponse(201, json.dumps(DUMMY_HUB))
-
-        with patch.object(Hub, '_make_request', return_value=response) as mock_request:
-            hub = Hub.create(**DUMMY_HUB)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/hubs/', data=DUMMY_HUB, files=None)
-
-    def test_retrieve_hub(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_HUB))
-
-        with patch.object(Hub, '_make_request', return_value=response) as mock_request:
-            hub = Hub.retrieve(hypertrack_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/hubs/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-    def test_update_hub(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_HUB))
-
-        with patch.object(Hub, '_make_request', return_value=response) as mock_request:
-            hub = Hub(id=hypertrack_id, **DUMMY_HUB)
-            hub.city = 'New York'
-            hub.save()
-            mock_request.assert_called_once_with('patch', 'https://app.hypertrack.io/api/v1/hubs/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'city': hub.city}, files=None)
-
-    def test_list_hub(self):
-        response = MockResponse(200, json.dumps({'results': [DUMMY_HUB]}))
-
-        with patch.object(Hub, '_make_request', return_value=response) as mock_request:
-            hubs = Hub.list()
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/hubs/', params={})
-
-    def test_delete_hub(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(204, json.dumps({}))
-
-        with patch.object(Hub, '_make_request', return_value=response) as mock_request:
-            hub = Hub(id=hypertrack_id, **DUMMY_HUB)
-            hub.delete()
-            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/hubs/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-
-class TaskTests(unittest2.TestCase):
-    '''
-    Test task methods
-    '''
-    def test_create_task(self):
-        response = MockResponse(201, json.dumps(DUMMY_TASK))
-
-        with patch.object(Task, '_make_request', return_value=response) as mock_request:
-            task = Task.create(**DUMMY_TASK)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/', data=DUMMY_TASK, files=None)
-
-    def test_retrieve_task(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TASK))
-
-        with patch.object(Task, '_make_request', return_value=response) as mock_request:
-            task = Task.retrieve(hypertrack_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-    def test_update_task(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TASK))
-
-        with patch.object(Task, '_make_request', return_value=response) as mock_request:
-            task = Task(id=hypertrack_id, **DUMMY_TASK)
-            task.city = 'New York'
-            task.save()
-            mock_request.assert_called_once_with('patch', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'city': task.city}, files=None)
-
-    def test_list_task(self):
-        response = MockResponse(200, json.dumps({'results': [DUMMY_TASK]}))
-
-        with patch.object(Task, '_make_request', return_value=response) as mock_request:
-            tasks = Task.list()
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/tasks/', params={})
-
-    def test_task_completed(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TASK))
+        response = MockResponse(200, json.dumps(DUMMY_ACTION))
         completion_location = {'type': 'Point', 'coordinates': [72, 19]}
         data = {'completion_location': completion_location}
 
-        with patch.object(Task, '_make_request', return_value=response) as mock_request:
-            task = Task(id=hypertrack_id, **DUMMY_TASK)
-            task.complete(**data)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/completed/'.format(hypertrack_id=hypertrack_id), data=data)
+        with patch.object(Action, '_make_request', return_value=response) as mock_request:
+            action = Action(id=hypertrack_id, **DUMMY_ACTION)
+            action.complete(**data)
+            mock_request.assert_called_once_with('post', 'https://api.hypertrack.com/api/v1/actions/{hypertrack_id}/complete/'.format(hypertrack_id=hypertrack_id), data=data)
 
-    def test_task_canceled(self):
+    def test_action_canceled(self):
         hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TASK))
+        response = MockResponse(200, json.dumps(DUMMY_ACTION))
         cancelation_time = '2016-03-09T06:00:20.648785Z'
         data = {'cancelation_time': cancelation_time}
 
-        with patch.object(Task, '_make_request', return_value=response) as mock_request:
-            task = Task(id=hypertrack_id, **DUMMY_TASK)
-            task.cancel(**data)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/canceled/'.format(hypertrack_id=hypertrack_id), data=data)
+        with patch.object(Action, '_make_request', return_value=response) as mock_request:
+            action = Action(id=hypertrack_id, **DUMMY_ACTION)
+            action.cancel(**data)
+            mock_request.assert_called_once_with('post', 'https://api.hypertrack.com/api/v1/actions/{hypertrack_id}/cancel/'.format(hypertrack_id=hypertrack_id), data=data)
 
-    def test_delete_task(self):
+    def test_delete_action(self):
         hypertrack_id = str(uuid.uuid4())
         response = MockResponse(204, json.dumps({}))
 
-        with patch.object(Task, '_make_request', return_value=response) as mock_request:
-            task = Task(id=hypertrack_id, **DUMMY_TASK)
-            task.delete()
-            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/tasks/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-
-class TripTests(unittest2.TestCase):
-    '''
-    Test trip methods
-    '''
-    def test_create_trip(self):
-        response = MockResponse(201, json.dumps(DUMMY_TRIP))
-
-        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
-            trip = Trip.create(**DUMMY_TRIP)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/trips/', data=DUMMY_TRIP, files=None)
-
-    def test_retrieve_trip(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TRIP))
-
-        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
-            trip = Trip.retrieve(hypertrack_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-    def test_update_trip(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TRIP))
-
-        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
-            trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
-            trip.city = 'New York'
-            trip.save()
-            mock_request.assert_called_once_with('patch', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id), data={'city': trip.city}, files=None)
-
-    def test_list_trip(self):
-        response = MockResponse(200, json.dumps({'results': [DUMMY_TRIP]}))
-
-        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
-            trips = Trip.list()
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/trips/', params={})
-
-    def test_trip_ended(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TRIP))
-        end_location = {'type': 'Point', 'coordinates': [72, 19]}
-        data = {'end_location': end_location}
-
-        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
-            trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
-            trip.end(end_location=end_location)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/end/'.format(hypertrack_id=hypertrack_id), data=data)
-
-    def test_trip_add_task(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TRIP))
-        task_id = str(uuid.uuid4())
-        data = {'task_id': task_id}
-
-        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
-            trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
-            trip.add_task(**data)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/add_task/'.format(hypertrack_id=hypertrack_id), data=data)
-
-    def test_trip_remove_task(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TRIP))
-        task_id = str(uuid.uuid4())
-        data = {'task_id': task_id}
-
-        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
-            trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
-            trip.remove_task(**data)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/remove_task/'.format(hypertrack_id=hypertrack_id), data=data)
-
-    def test_trip_change_order(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_TRIP))
-        task_order = [str(uuid.uuid4()), str(uuid.uuid4())]
-        data = {'task_order': task_order}
-
-        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
-            trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
-            trip.change_task_order(**data)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/change_task_order/'.format(hypertrack_id=hypertrack_id), data=data)
-
-    def test_delete_trip(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(204, json.dumps({}))
-
-        with patch.object(Trip, '_make_request', return_value=response) as mock_request:
-            trip = Trip(id=hypertrack_id, **DUMMY_TRIP)
-            trip.delete()
-            mock_request.assert_called_once_with('delete', 'https://app.hypertrack.io/api/v1/trips/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-
-class GPSLogTests(unittest2.TestCase):
-    '''
-    Test gpslog methods
-    '''
-    def test_create_gpslog(self):
-        response = MockResponse(201, json.dumps(DUMMY_GPSLOG))
-
-        with patch.object(GPSLog, '_make_request', return_value=response) as mock_request:
-            gpslog = GPSLog.create(**DUMMY_GPSLOG)
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/gps/', data=DUMMY_GPSLOG, files=None)
-
-    def test_retrieve_gpslog(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_GPSLOG))
-
-        with patch.object(GPSLog, '_make_request', return_value=response) as mock_request:
-            gpslog = GPSLog.retrieve(hypertrack_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/gps/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-    def test_list_gpslog(self):
-        response = MockResponse(200, json.dumps({'results': [DUMMY_GPSLOG]}))
-
-        with patch.object(GPSLog, '_make_request', return_value=response) as mock_request:
-            gps = GPSLog.list()
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/gps/', params={})
-
-    def test_list_gpslog_filtered(self):
-        response = MockResponse(200, json.dumps({'results': [DUMMY_GPSLOG]}))
-        trip_id = str(uuid.uuid4())
-        params = {'trip_id': trip_id}
-
-        with patch.object(GPSLog, '_make_request', return_value=response) as mock_request:
-            gps = GPSLog.filtered(trip_id=trip_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/gps/filtered/', params=params)
-
-    def test_bulk_gpslog(self):
-        response = MockResponse(200, json.dumps({}))
-
-        with patch.object(GPSLog, '_make_request', return_value=response) as mock_request:
-            response  = GPSLog.bulk([DUMMY_GPSLOG])
-            mock_request.assert_called_once_with('post', 'https://app.hypertrack.io/api/v1/gps/bulk/', data=[DUMMY_GPSLOG])
+        with patch.object(Action, '_make_request', return_value=response) as mock_request:
+            action = Action(id=hypertrack_id, **DUMMY_ACTION)
+            action.delete()
+            mock_request.assert_called_once_with('delete', 'https://api.hypertrack.com/api/v1/actions/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
 
 class EventTests(unittest2.TestCase):
@@ -692,31 +409,11 @@ class EventTests(unittest2.TestCase):
 
         with patch.object(Event, '_make_request', return_value=response) as mock_request:
             event = Event.retrieve(hypertrack_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/events/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/events/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
     def test_list_event(self):
         response = MockResponse(200, json.dumps({'results': [DUMMY_EVENT]}))
 
         with patch.object(Event, '_make_request', return_value=response) as mock_request:
             events = Event.list()
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/events/', params={})
-
-
-class NeighborhoodTests(unittest2.TestCase):
-    '''
-    Test Neighborhood methods
-    '''
-    def test_retrieve_neighborhood(self):
-        hypertrack_id = str(uuid.uuid4())
-        response = MockResponse(200, json.dumps(DUMMY_NEIGHBORHOOD))
-
-        with patch.object(Neighborhood, '_make_request', return_value=response) as mock_request:
-            neighborhood = Neighborhood.retrieve(hypertrack_id)
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/neighborhoods/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
-
-    def test_list_event(self):
-        response = MockResponse(200, json.dumps({'results': [DUMMY_NEIGHBORHOOD]}))
-
-        with patch.object(Neighborhood, '_make_request', return_value=response) as mock_request:
-            neighborhoods = Neighborhood.list()
-            mock_request.assert_called_once_with('get', 'https://app.hypertrack.io/api/v1/neighborhoods/', params={})
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/events/', params={})

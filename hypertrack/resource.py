@@ -330,143 +330,43 @@ class DeleteMixin(object):
         return self
 
 
-class Customer(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
-               DeleteMixin):
+class Action(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
+             DeleteMixin):
     '''
     The Customer Resource: http://docs.hypertrack.io/docs/customers
     '''
-    resource_url = 'customers/'
-
-
-class Destination(APIResource, CreateMixin, RetrieveMixin, UpdateMixin,
-                  ListMixin, DeleteMixin):
-    '''
-    The Destination Resource: http://docs.hypertrack.io/docs/destinations
-    '''
-    resource_url = 'destinations/'
-
-
-class Fleet(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
-            DeleteMixin):
-    '''
-    The Fleet Resource: http://docs.hypertrack.io/docs/fleets
-    '''
-    resource_url = 'fleets/'
-
-
-class Driver(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
-             DeleteMixin):
-    '''
-    The Driver Resource: http://docs.hypertrack.io/docs/drivers
-    '''
-    resource_url = 'drivers/'
-
-    @classmethod
-    def create(cls, **data):
-        '''
-        '''
-        if 'photo' in data and hasattr(data['photo'], 'read'):
-            # Send photo as file since it's a file
-            files = {'photo': data.pop('photo')}
-        else:
-            files = None
-
-        return super(Driver, cls).create(files=files, **data)
-
-    def save(self, *args, **kwargs):
-        '''
-        '''
-        if 'photo' in self._unsaved_keys and hasattr(self.photo, 'read'):
-            # Send photo as file since it's a file
-            files = {'photo': self.photo}
-            self._unsaved_keys.remove('photo')
-        else:
-            files = None
-
-        super(Driver, self).save(files=files)
-
-    def assign_tasks(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'assign_tasks/')
-        resp = self._make_request('post', url, data=data)
-        return self.__class__(**resp.json())
-
-    def end_trip(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'end_trip/')
-        resp = self._make_request('post', url, data=data)
-        return self.__class__(**resp.json())
-
-
-class Hub(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
-          DeleteMixin):
-    '''
-    The Hub Resource: http://docs.hypertrack.io/docs/hubs
-    '''
-    resource_url = 'hubs/'
-
-
-class Task(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
-           DeleteMixin):
-    '''
-    The Task Resource: http://docs.hypertrack.io/docs/tasks
-    '''
-    resource_url = 'tasks/'
+    resource_url = 'actions/'
 
     def complete(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'completed/')
+        url = urlparse.urljoin(self.get_instance_url(), 'complete/')
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 
     def cancel(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'canceled/')
+        url = urlparse.urljoin(self.get_instance_url(), 'complete/')
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 
 
-class Trip(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
-           DeleteMixin):
+class User(APIResource, CreateMixin, RetrieveMixin, UpdateMixin,
+            ListMixin, DeleteMixin):
     '''
-    The Trip Resource: http://docs.hypertrack.io/docs/trips
+    The Destination Resource: http://docs.hypertrack.io/docs/destinations
     '''
-    resource_url = 'trips/'
+    resource_url = 'users/'
 
-    def end(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'end/')
-        resp = self._make_request('post', url, data=data)
-        return self.__class__(**resp.json())
-
-    def remove_task(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'remove_task/')
-        resp = self._make_request('post', url, data=data)
-        return self.__class__(**resp.json())
-
-    def add_task(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'add_task/')
-        resp = self._make_request('post', url, data=data)
-        return self.__class__(**resp.json())
-
-    def change_task_order(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'change_task_order/')
+    def assign_actions(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'assign_actions/')
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 
 
-class GPSLog(APIResource, CreateMixin, RetrieveMixin, ListMixin):
+class Place(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
+            DeleteMixin):
     '''
-    The GPS Resource: http://docs.hypertrack.io/docs/gps-logs
+    The Fleet Resource: http://docs.hypertrack.io/docs/fleets
     '''
-    resource_url = 'gps/'
-
-    @classmethod
-    def filtered(cls, **params):
-        url = urlparse.urljoin(cls.get_class_url(), 'filtered/')
-        resp = cls._make_request('get', url, params=params)
-        return ListObject(cls, **resp.json())
-
-    @classmethod
-    def bulk(cls, data):
-        url = urlparse.urljoin(cls.get_class_url(), 'bulk/')
-        resp = cls._make_request('post', url, data=data)
-        return cls(**resp.json())
+    resource_url = 'places/'
 
 
 class Event(APIResource, RetrieveMixin, ListMixin):
@@ -474,23 +374,3 @@ class Event(APIResource, RetrieveMixin, ListMixin):
     The Event Resource: http://docs.hypertrack.io/docs/events
     '''
     resource_url = 'events/'
-
-
-class Neighborhood(APIResource, RetrieveMixin, ListMixin):
-    '''
-    The Neighborhood Resource: http://docs.hypertrack.io/docs/neighbourhoods/
-    '''
-    resource_url = 'neighborhoods/'
-
-
-class Shift(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
-            DeleteMixin):
-    '''
-    The Trip Resource: http://docs.hypertrack.io/docs/trips
-    '''
-    resource_url = 'shifts/'
-
-    def end(self, **data):
-        url = urlparse.urljoin(self.get_instance_url(), 'end/')
-        resp = self._make_request('post', url, data=data)
-        return self.__class__(**resp.json())

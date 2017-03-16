@@ -321,6 +321,16 @@ class UserTests(unittest2.TestCase):
             user.assign_actions(**data)
             mock_request.assert_called_once_with('post', 'https://api.hypertrack.com/api/v1/users/{hypertrack_id}/assign_actions/'.format(hypertrack_id=hypertrack_id), data=data)
 
+    def test_user_cancel_actions(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps(DUMMY_USER))
+        data = {}
+
+        with patch.object(User, '_make_request', return_value=response) as mock_request:
+            user = User(id=hypertrack_id, **DUMMY_USER)
+            user.cancel_actions(**data)
+            mock_request.assert_called_once_with('post', 'https://api.hypertrack.com/api/v1/users/{hypertrack_id}/cancel_actions/'.format(hypertrack_id=hypertrack_id), data=data)
+
     def test_delete_user(self):
         hypertrack_id = str(uuid.uuid4())
         response = MockResponse(204, json.dumps({}))

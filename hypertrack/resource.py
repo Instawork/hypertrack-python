@@ -360,6 +360,11 @@ class User(APIResource, CreateMixin, RetrieveMixin, UpdateMixin,
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 
+    def cancel_actions(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'cancel_actions/')
+        resp = self._make_request('post', url, data=data)
+        return self.__class__(**resp.json())
+
     def stop_tracking(self, **data):
         url = urlparse.urljoin(self.get_instance_url(), 'stop_tracking/')
         resp = self._make_request('post', url, data=data)

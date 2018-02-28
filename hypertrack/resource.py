@@ -389,3 +389,12 @@ class Event(APIResource, RetrieveMixin, ListMixin):
     The Event Resource: http://docs.hypertrack.io/docs/events
     '''
     resource_url = 'events/'
+
+
+class Geofence(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
+            DeleteMixin):
+    '''
+    The Geofence Resource: https://docs.hypertrack.com/api/entities/geofence.html
+    '''
+    resource_url = 'geofences/'
+

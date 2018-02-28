@@ -6,7 +6,8 @@ from hypertrack.resource import (
     Action,
     User,
     Place,
-    Event
+    Event,
+    Geofence
 )
 
 from hypertrack.version import VERSION

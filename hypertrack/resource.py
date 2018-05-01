@@ -97,14 +97,15 @@ class APIResource(HyperTrackObject):
         '''
         Returns the base URL to be used for the API request
         '''
-        return hypertrack.base_url
+        return hypertrack.base_url + hypertrack.api_version + '/'
 
     @classmethod
     def _get_user_agent(cls):
         '''
         Returns user agent for the API request
         '''
-        user_agent = 'HyperTrack/v1 PythonBindings/{version}'.format(
+        user_agent = 'HyperTrack/{api} PythonBindings/{version}'.format(
+            api=hypertrack.api_version,
             version=version.VERSION)
         return user_agent
 
@@ -347,6 +348,17 @@ class Action(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 
+    def mileage(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'mileage/')
+        resp = self._make_request('get', url, data=data)
+        return self.__class__(**resp.json())
+
+    @classmethod
+    def placeline(cls, **params):
+        url = urlparse.urljoin(cls.get_class_url(), 'placeline/')
+        resp = cls._make_request('get', url, params=params)
+        return ListObject(cls, **resp.json())
+
 
 class User(APIResource, CreateMixin, RetrieveMixin, UpdateMixin,
             ListMixin, DeleteMixin):
@@ -375,11 +387,20 @@ class User(APIResource, CreateMixin, RetrieveMixin, UpdateMixin,
         resp = self._make_request('post', url, data=data)
         return self.__class__(**resp.json())
 
+    def placeline(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'placeline/')
+        resp = self._make_request('get', url, data=data)
+        return self.__class__(**resp.json())
+
+    def mileage(self, **data):
+        url = urlparse.urljoin(self.get_instance_url(), 'mileage/')
+        resp = self._make_request('get', url, data=data)
+        return self.__class__(**resp.json())
 
 class Place(APIResource, CreateMixin, RetrieveMixin, UpdateMixin, ListMixin,
             DeleteMixin):
     '''
-    The Fleet Resource: http://docs.hypertrack.io/docs/fleets
+    https://docs.hypertrack.com/api/entities/place.html
     '''
     resource_url = 'places/'
 

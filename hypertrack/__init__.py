@@ -1,5 +1,6 @@
 secret_key = None
-base_url = 'https://api.hypertrack.com/api/v1/'
+api_version = 'v1'
+base_url = 'https://api.hypertrack.com/api/'
 
 
 from hypertrack.resource import (

@@ -24,6 +24,7 @@ Then, you can just import hypertrack and set your secret key on it.
 import hypertrack
 
 hypertrack.secret_key = 'c237rtyfeo9893u2t4ghoevslsd'
+hypertrack.api_version = 'v2' # optional. defaults to v1
 
 customer = hypertrack.Customer.create(
     name='John Doe',

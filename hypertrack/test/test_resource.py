@@ -350,6 +350,25 @@ class UserTests(unittest2.TestCase):
             user.delete()
             mock_request.assert_called_once_with('delete', 'https://api.hypertrack.com/api/v1/users/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
+    def test_v2_user_placeline(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps({}))
+        data = {}
+
+        with patch.object(User, '_make_request', return_value=response) as mock_request:
+            user = User(id=hypertrack_id, **DUMMY_USER)
+            user.placeline()
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/users/{hypertrack_id}/placeline/'.format(hypertrack_id=hypertrack_id), data=data)
+
+    def test_v2_user_mileage(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps({}))
+        data = {}
+
+        with patch.object(User, '_make_request', return_value=response) as mock_request:
+            user = User(id=hypertrack_id, **DUMMY_USER)
+            user.mileage()
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/users/{hypertrack_id}/mileage/'.format(hypertrack_id=hypertrack_id), data=data)
 
 class ActionTests(unittest2.TestCase):
     '''
@@ -387,6 +406,13 @@ class ActionTests(unittest2.TestCase):
             actions = Action.list()
             mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/actions/', params={})
 
+    def test_placeline_action(self):
+        response = MockResponse(200, json.dumps({'results': [DUMMY_ACTION]}))
+
+        with patch.object(Action, '_make_request', return_value=response) as mock_request:
+            actions = Action.placeline()
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/actions/placeline/', params={})
+
     def test_action_completed(self):
         hypertrack_id = str(uuid.uuid4())
         response = MockResponse(200, json.dumps(DUMMY_ACTION))
@@ -418,6 +444,15 @@ class ActionTests(unittest2.TestCase):
             action.delete()
             mock_request.assert_called_once_with('delete', 'https://api.hypertrack.com/api/v1/actions/{hypertrack_id}/'.format(hypertrack_id=hypertrack_id))
 
+    def test_v2_action_mileage(self):
+        hypertrack_id = str(uuid.uuid4())
+        response = MockResponse(200, json.dumps({}))
+        data = {}
+
+        with patch.object(Action, '_make_request', return_value=response) as mock_request:
+            action = Action(id=hypertrack_id, **DUMMY_ACTION)
+            action.mileage()
+            mock_request.assert_called_once_with('get', 'https://api.hypertrack.com/api/v1/actions/{hypertrack_id}/mileage/'.format(hypertrack_id=hypertrack_id), data=data)
 
 class EventTests(unittest2.TestCase):
     '''
